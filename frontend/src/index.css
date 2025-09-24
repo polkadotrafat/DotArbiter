@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light;
+  color: #242424;
+  background-color: #ffffff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Polkadot-inspired color palette */
+:root {
+  --polkadot-pink: #e6007a;
+  --polkadot-purple: #560bd7;
+  --polkadot-dark: #020c20;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #f9fafb; /* Light gray background */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--polkadot-dark);
+}
+
+/* Custom scrollbar for better UI */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Polkadot pink accent color */
+.bg-pink-polkadot {
+  background-color: var(--polkadot-pink);
+}
+
+.text-pink-polkadot {
+  color: var(--polkadot-pink);
+}
+
+.border-pink-polkadot {
+  border-color: var(--polkadot-pink);
+}
+
+.hover\:bg-pink-polkadot:hover {
+  background-color: var(--polkadot-pink);
+}
+
+/* Polkadot dark purple accent color */
+.bg-purple-polkadot {
+  background-color: var(--polkadot-purple);
+}
+
+.text-purple-polkadot {
+  color: var(--polkadot-purple);
+}
+
+.border-purple-polkadot {
+  border-color: var(--polkadot-purple);
+}
+
+.hover\:bg-purple-polkadot:hover {
+  background-color: var(--polkadot-purple);
+}
+
+/* Dark theme colors */
+.bg-dark-polkadot {
+  background-color: var(--polkadot-dark);
+}
+
+.text-dark-polkadot {
+  color: var(--polkadot-dark);
+}
+
+.border-dark-polkadot {
+  border-color: var(--polkadot-dark);
+}
+
+.hover\:bg-dark-polkadot:hover {
+  background-color: var(--polkadot-dark);
+}

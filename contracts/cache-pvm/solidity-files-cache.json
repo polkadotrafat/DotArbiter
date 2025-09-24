@@ -1,0 +1,760 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/contracts/DelegationLogic.sol": {
+      "lastModificationDate": 1758386030624,
+      "contentHash": "e945efdf6b09c918348c53ff4d879c07",
+      "sourceName": "contracts/DelegationLogic.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "compilerSource": "npm"
+          }
+        }
+      },
+      "imports": [
+        "./Storage.sol",
+        "./GovernanceStorage.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "DelegationLogic"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/contracts/GovernanceStorage.sol": {
+      "lastModificationDate": 1758516966195,
+      "contentHash": "2adb700d8f0bc13642495149e11c1d32",
+      "sourceName": "contracts/GovernanceStorage.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "compilerSource": "npm"
+          }
+        }
+      },
+      "imports": [
+        "./Storage.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "GovernanceStorage"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/contracts/Storage.sol": {
+      "lastModificationDate": 1758683395717,
+      "contentHash": "7e5adbc9cbdd144f89c413b5538ef320",
+      "sourceName": "contracts/Storage.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "compilerSource": "npm"
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Storage"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/contracts/XCMExecutor.sol": {
+      "lastModificationDate": 1758683596737,
+      "contentHash": "bd251ff8dc629268171b3f17dc5217f9",
+      "sourceName": "contracts/XCMExecutor.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "compilerSource": "npm"
+          }
+        }
+      },
+      "imports": [
+        "./Storage.sol",
+        "./GovernanceStorage.sol",
+        "./IXcm.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "XcmExecutor"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/contracts/IXcm.sol": {
+      "lastModificationDate": 1758355748309,
+      "contentHash": "1a4763f5b78f0b9162addcaa90a92af4",
+      "sourceName": "contracts/IXcm.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "compilerSource": "npm"
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IXcm"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/contracts/test/MockXCM.sol": {
+      "lastModificationDate": 1758468867644,
+      "contentHash": "8647721414ac89c8046c7eba90814f28",
+      "sourceName": "contracts/test/MockXCM.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "compilerSource": "npm"
+          }
+        }
+      },
+      "imports": [
+        "../IXcm.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MockXcm"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/contracts/ProposalLogic.sol": {
+      "lastModificationDate": 1758683414194,
+      "contentHash": "bb578164103aa35e8e2c5ecce09c1fd0",
+      "sourceName": "contracts/ProposalLogic.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "compilerSource": "npm"
+          }
+        }
+      },
+      "imports": [
+        "./GovernanceStorage.sol",
+        "./Storage.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "ProposalLogic"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/contracts/GovernanceHub.sol": {
+      "lastModificationDate": 1758533874636,
+      "contentHash": "6651da33689e97d570f8be0d5001d88a",
+      "sourceName": "contracts/GovernanceHub.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "compilerSource": "npm"
+          }
+        }
+      },
+      "imports": [
+        "./GovernanceStorage.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "GovernanceHub"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/node_modules/@openzeppelin/contracts/access/AccessControl.sol": {
+      "lastModificationDate": 1758279991039,
+      "contentHash": "849b15469d8e2bd01b49e6c632e448e7",
+      "sourceName": "@openzeppelin/contracts/access/AccessControl.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IAccessControl.sol",
+        "../utils/Context.sol",
+        "../utils/introspection/ERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "AccessControl"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
+      "lastModificationDate": 1758279991376,
+      "contentHash": "57d79df281f57bbb1b09214c7914f877",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IERC20.sol",
+        "./extensions/IERC20Metadata.sol",
+        "../../utils/Context.sol",
+        "../../interfaces/draft-IERC6093.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "ERC20"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/node_modules/@openzeppelin/contracts/access/IAccessControl.sol": {
+      "lastModificationDate": 1758279991492,
+      "contentHash": "80621031deacf7066ec81277f9b1463a",
+      "sourceName": "@openzeppelin/contracts/access/IAccessControl.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IAccessControl"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol": {
+      "lastModificationDate": 1758279991377,
+      "contentHash": "273d8d24b06f67207dd5f35c3a0c1086",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
+          }
+        }
+      },
+      "imports": [
+        "../ERC20.sol",
+        "../../../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "ERC20Burnable"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/node_modules/@openzeppelin/contracts/utils/Pausable.sol": {
+      "lastModificationDate": 1758279991648,
+      "contentHash": "0d47b53e10b1985efbb396f937626279",
+      "sourceName": "@openzeppelin/contracts/utils/Pausable.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
+          }
+        }
+      },
+      "imports": [
+        "../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Pausable"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/node_modules/@openzeppelin/contracts/utils/Context.sol": {
+      "lastModificationDate": 1758279991176,
+      "contentHash": "67bfbc07588eb8683b3fd8f6f909563e",
+      "sourceName": "@openzeppelin/contracts/utils/Context.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Context"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+      "lastModificationDate": 1758279991336,
+      "contentHash": "7c03c1e37c3dc24eafb76dc2b8a5c3a6",
+      "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "ERC165"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+      "lastModificationDate": 1758279991533,
+      "contentHash": "bf0119eb2a570f219729ff38b6cd1df8",
+      "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC165"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol": {
+      "lastModificationDate": 1758279991256,
+      "contentHash": "267d92fe4de67b1bdb3302c08f387dbf",
+      "sourceName": "@openzeppelin/contracts/interfaces/draft-IERC6093.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC1155Errors",
+        "IERC20Errors",
+        "IERC721Errors"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
+      "lastModificationDate": 1758279991542,
+      "contentHash": "794db3115001aa372c79326fcfd44b1f",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
+          }
+        }
+      },
+      "imports": [
+        "../IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC20Metadata"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+      "lastModificationDate": 1758279991539,
+      "contentHash": "8f19f64d2adadf448840908bbaf431c8",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC20"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/contracts/test/MockReceiver.sol": {
+      "lastModificationDate": 1758468435289,
+      "contentHash": "25392ab278382f36b0255560da9276d3",
+      "sourceName": "contracts/test/MockReceiver.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "compilerSource": "npm"
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MockReceiver"
+      ]
+    },
+    "/Users/rafat/code/hackathons/DotArbiter/contracts/contracts/test/MockXCMExecutor.sol": {
+      "lastModificationDate": 1758514333474,
+      "contentHash": "ffb8e3608b3b5301e2413fa1c3ae9445",
+      "sourceName": "contracts/test/MockXCMExecutor.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi"
+              ]
+            }
+          },
+          "resolc": {
+            "compilerSource": "npm"
+          }
+        }
+      },
+      "imports": [
+        "../Storage.sol",
+        "../GovernanceStorage.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MockXcmExecutor"
+      ]
+    }
+  }
+}
