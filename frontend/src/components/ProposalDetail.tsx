@@ -7,51 +7,50 @@ export const ProposalDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [proposal, setProposal] = useState<any>(null);
   const [votingPower, setVotingPower] = useState<number>(0);
-  const [loading, setLoading] = useState(true);
   const [voteSubmitted, setVoteSubmitted] = useState(false);
   
-  const { address } = useAccount();
+  const { address, chainId } = useAccount();
   const { writeContract, isPending } = useWriteContract();
+  
+  // Use wagmi's useReadContract hook for fetching proposal data
+  const { data: rawProposalData, isLoading, isError } = useReadContract({
+    address: chainId ? governanceHubAddress[chainId as keyof typeof governanceHubAddress] : governanceHubAddress[420420422],
+    abi: governanceHubAbi,
+    functionName: "proposals",
+    args: [BigInt(id || "0")],
+    query: {
+      enabled: !!id
+    }
+  });
 
   useEffect(() => {
-    const fetchProposal = async () => {
-      if (id) {
-        try {
-          const result = await useReadContract({
-            address: governanceHubAddress[31337] || governanceHubAddress[420420422],
-            abi: governanceHubAbi,
-            functionName: "getProposal",
-            args: [BigInt(id)],
-          });
-          
-          if (result) {
-            setProposal({
-              id: Number(id),
-              ...result,
-            });
-          }
-        } catch (err) {
-          console.error("Error fetching proposal:", err);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
+    if (rawProposalData && id) {
+      setProposal({
+        id: Number(id),
+        ...rawProposalData,
+      });
+    }
+  }, [rawProposalData, id]);
 
-    // Mock voting power for now
+  // Mock voting power for now
+  useEffect(() => {
     setVotingPower(100);
-    fetchProposal();
-  }, [id]);
+  }, []);
 
   const handleVote = async (support: boolean) => {
-    if (!proposal) return;
+    if (!proposal || !chainId) return;
     
     try {
+      const contractAddress = governanceHubAddress[chainId as keyof typeof governanceHubAddress] || governanceHubAddress[420420422];
+      if (!contractAddress) {
+        throw new Error(`Contract address not found for chain ID: ${chainId}`);
+      }
+      
       await writeContract({
-        address: governanceHubAddress[31337] || governanceHubAddress[420420422],
+        address: contractAddress,
         abi: governanceHubAbi,
-        functionName: "vote",
-        args: [BigInt(proposal.id), support, BigInt(votingPower)],
+        functionName: "vote" as any,
+        args: [BigInt(proposal.id), support, BigInt(votingPower)] as any,
       });
       
       setVoteSubmitted(true);
@@ -61,7 +60,7 @@ export const ProposalDetail = () => {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center py-8">
@@ -71,7 +70,7 @@ export const ProposalDetail = () => {
     );
   }
 
-  if (!proposal) {
+  if (!proposal || isError) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow-md p-8 text-center">

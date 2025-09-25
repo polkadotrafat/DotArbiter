@@ -8,7 +8,7 @@ export const CreateProposal = () => {
     { targetParaId: 0, target: "", value: "", calldata: "", description: "" }
   ]);
   
-  const { address } = useAccount();
+  const { address, chainId } = useAccount();
   const { writeContract, isPending, isSuccess } = useWriteContract();
 
   const handleAddAction = () => {
@@ -50,11 +50,16 @@ export const CreateProposal = () => {
     ]);
 
     try {
+      const contractAddress = chainId ? governanceHubAddress[chainId as keyof typeof governanceHubAddress] : governanceHubAddress[420420422];
+      if (!contractAddress) {
+        throw new Error(`Contract address not found for chain ID: ${chainId}`);
+      }
+      
       await writeContract({
-        address: governanceHubAddress[31337] || governanceHubAddress[420420422],
+        address: contractAddress,
         abi: governanceHubAbi,
-        functionName: "createProposal",
-        args: [description, formattedActions],
+        functionName: "createProposal" as any,
+        args: [description, formattedActions] as any,
       });
     } catch (err) {
       console.error("Error creating proposal:", err);

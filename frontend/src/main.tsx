@@ -56,7 +56,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider chains={chains}>
+        <RainbowKitProvider>
           <RouterProvider router={router} />
         </RainbowKitProvider>
       </QueryClientProvider>

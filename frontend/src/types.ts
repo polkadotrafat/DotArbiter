@@ -1,4 +1,4 @@
-import { type Abi } from "wagmi";
+import { type Abi } from "viem";
 
 export type ContractData = {
   contractName: string;

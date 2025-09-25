@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useReadContract } from "wagmi";
+import { useReadContract, useAccount } from "wagmi";
 import { governanceHubAbi, governanceHubAddress } from "../generated";
 
 export const Proposals = () => {
   const [proposals, setProposals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   
-  const { data: proposalCountData, refetch: refetchProposalCount } = useReadContract({
-    address: governanceHubAddress[31337] || governanceHubAddress[420420422],
+  const { chainId } = useAccount();
+  const { data: proposalCountData } = useReadContract({
+    address: chainId ? governanceHubAddress[chainId as keyof typeof governanceHubAddress] : governanceHubAddress[420420422],
     abi: governanceHubAbi,
     functionName: "proposalCount",
   });
@@ -23,10 +24,22 @@ export const Proposals = () => {
           
           for (let i = 1; i <= count; i++) {
             try {
-              const { data: proposalData } = await useReadContract({
-                address: governanceHubAddress[31337] || governanceHubAddress[420420422],
+              const { createPublicClient, http } = await import('viem');
+              
+              // Determine the RPC URL based on the detected chainId
+              let rpcUrl = 'https://testnet-passet-hub-eth-rpc.polkadot.io'; // Default for 420420422
+              if (chainId === 31337) {
+                rpcUrl = 'http://127.0.0.1:8545'; // Local hardhat
+              }
+              
+              const publicClient = createPublicClient({
+                transport: http(rpcUrl),
+              });
+              
+              const proposalData = await publicClient.readContract({
+                address: chainId ? governanceHubAddress[chainId as keyof typeof governanceHubAddress] : governanceHubAddress[420420422],
                 abi: governanceHubAbi,
-                functionName: "getProposal",
+                functionName: "proposals",
                 args: [BigInt(i)],
               });
               
@@ -51,7 +64,7 @@ export const Proposals = () => {
     };
 
     fetchProposals();
-  }, [proposalCountData]);
+  }, [proposalCountData, chainId]);
 
   const getStatusText = (status: number) => {
     const statusTexts = ["Pending", "Active", "Passed", "Failed", "Executed"];

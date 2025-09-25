@@ -1,0 +1,256 @@
+.
+├── contracts
+│   ├── artifacts
+│   │   ├── @openzeppelin
+│   │   │   └── contracts
+│   │   │       ├── access
+│   │   │       │   ├── AccessControl.sol
+│   │   │       │   └── IAccessControl.sol
+│   │   │       ├── interfaces
+│   │   │       │   └── draft-IERC6093.sol
+│   │   │       ├── token
+│   │   │       │   └── ERC20
+│   │   │       └── utils
+│   │   │           ├── Context.sol
+│   │   │           ├── introspection
+│   │   │           └── Pausable.sol
+│   │   ├── build-info
+│   │   │   ├── 46ad5fff5185df3ecf97931525862d0d.json
+│   │   │   └── e9931f7e99de3aaa7f600f01b6d26765.json
+│   │   └── contracts
+│   │       ├── DelegationLogic.sol
+│   │       │   ├── DelegationLogic.dbg.json
+│   │       │   └── DelegationLogic.json
+│   │       ├── GovernanceHub.sol
+│   │       │   ├── GovernanceHub.dbg.json
+│   │       │   └── GovernanceHub.json
+│   │       ├── GovernanceStorage.sol
+│   │       │   ├── GovernanceStorage.dbg.json
+│   │       │   └── GovernanceStorage.json
+│   │       ├── IXcm.sol
+│   │       │   ├── IXcm.dbg.json
+│   │       │   └── IXcm.json
+│   │       ├── MyToken.sol
+│   │       ├── ProposalLogic.sol
+│   │       │   ├── ProposalLogic.dbg.json
+│   │       │   └── ProposalLogic.json
+│   │       ├── Storage.sol
+│   │       │   ├── Storage.dbg.json
+│   │       │   └── Storage.json
+│   │       ├── test
+│   │       │   ├── MockReceiver.sol
+│   │       │   │   ├── MockReceiver.dbg.json
+│   │       │   │   └── MockReceiver.json
+│   │       │   ├── MockXCM.sol
+│   │       │   │   ├── MockXcm.dbg.json
+│   │       │   │   └── MockXcm.json
+│   │       │   └── MockXCMExecutor.sol
+│   │       │       ├── MockXcmExecutor.dbg.json
+│   │       │       └── MockXcmExecutor.json
+│   │       └── XCMExecutor.sol
+│   │           ├── XcmExecutor.dbg.json
+│   │           └── XcmExecutor.json
+│   ├── artifacts-pvm
+│   │   ├── @openzeppelin
+│   │   │   └── contracts
+│   │   │       ├── access
+│   │   │       │   ├── AccessControl.sol
+│   │   │       │   └── IAccessControl.sol
+│   │   │       ├── interfaces
+│   │   │       │   └── draft-IERC6093.sol
+│   │   │       ├── token
+│   │   │       │   └── ERC20
+│   │   │       └── utils
+│   │   │           ├── Context.sol
+│   │   │           ├── introspection
+│   │   │           └── Pausable.sol
+│   │   ├── build-info
+│   │   │   ├── 19beaa87ef2d5dbc17affc932464a683.json
+│   │   │   ├── 79b6cb3205294df0c6f3501ce0b19239.json
+│   │   │   ├── a74ee66825eef519740439a3b7502049.json
+│   │   │   ├── c58acae417d9e8d85053ab0df7c6aff9.json
+│   │   │   └── caea97a1511f833e0c640f26eb04333a.json
+│   │   └── contracts
+│   │       ├── DelegationLogic.sol
+│   │       │   ├── DelegationLogic.dbg.json
+│   │       │   └── DelegationLogic.json
+│   │       ├── GovernanceHub.sol
+│   │       │   ├── GovernanceHub.dbg.json
+│   │       │   └── GovernanceHub.json
+│   │       ├── GovernanceStorage.sol
+│   │       │   ├── GovernanceStorage.dbg.json
+│   │       │   └── GovernanceStorage.json
+│   │       ├── IXcm.sol
+│   │       │   ├── IXcm.dbg.json
+│   │       │   └── IXcm.json
+│   │       ├── MyToken.sol
+│   │       │   ├── MyToken.dbg.json
+│   │       │   └── MyToken.json
+│   │       ├── ProposalLogic.sol
+│   │       │   ├── ProposalLogic.dbg.json
+│   │       │   └── ProposalLogic.json
+│   │       ├── Storage.sol
+│   │       │   ├── Storage.dbg.json
+│   │       │   └── Storage.json
+│   │       ├── test
+│   │       │   ├── MockReceiver.sol
+│   │       │   │   ├── MockReceiver.dbg.json
+│   │       │   │   └── MockReceiver.json
+│   │       │   ├── MockXCM.sol
+│   │       │   │   ├── MockXcm.dbg.json
+│   │       │   │   └── MockXcm.json
+│   │       │   └── MockXCMExecutor.sol
+│   │       │       ├── MockXcmExecutor.dbg.json
+│   │       │       └── MockXcmExecutor.json
+│   │       └── XCMExecutor.sol
+│   │           ├── XcmExecutor.dbg.json
+│   │           └── XcmExecutor.json
+│   ├── cache
+│   │   └── solidity-files-cache.json
+│   ├── cache-pvm
+│   │   └── solidity-files-cache.json
+│   ├── contracts
+│   │   ├── DelegationLogic.sol
+│   │   ├── GovernanceHub.sol
+│   │   ├── GovernanceStorage.sol
+│   │   ├── IXcm.sol
+│   │   ├── ProposalLogic.sol
+│   │   ├── Storage.sol
+│   │   ├── test
+│   │   │   ├── MockReceiver.sol
+│   │   │   ├── MockXCM.sol
+│   │   │   └── MockXCMExecutor.sol
+│   │   └── XCMExecutor.sol
+│   ├── deployments.txt
+│   ├── hardhat.config.ts
+│   ├── ignition
+│   │   ├── deployments
+│   │   │   └── chain-420420422
+│   │   │       ├── artifacts
+│   │   │       │   ├── DeployAndSetupGovernance#DelegationLogic.dbg.json
+│   │   │       │   ├── DeployAndSetupGovernance#DelegationLogic.json
+│   │   │       │   ├── DeployAndSetupGovernance#GovernanceHub.dbg.json
+│   │   │       │   ├── DeployAndSetupGovernance#GovernanceHub.json
+│   │   │       │   ├── DeployAndSetupGovernance#ProposalLogic.dbg.json
+│   │   │       │   ├── DeployAndSetupGovernance#ProposalLogic.json
+│   │   │       │   ├── DeployAndSetupGovernance#XcmExecutor.dbg.json
+│   │   │       │   └── DeployAndSetupGovernance#XcmExecutor.json
+│   │   │       ├── build-info
+│   │   │       │   └── 19beaa87ef2d5dbc17affc932464a683.json
+│   │   │       ├── deployed_addresses.json
+│   │   │       └── journal.jsonl
+│   │   └── modules
+│   │       └── DeployAndSetupGovernance.ts
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── scripts
+│   │   └── setupGovernance.js
+│   ├── test
+│   │   └── DotArbiter.ts
+│   ├── tsconfig.json
+│   └── typechain-types
+│       ├── @openzeppelin
+│       │   ├── contracts
+│       │   │   ├── access
+│       │   │   │   ├── AccessControl.ts
+│       │   │   │   ├── IAccessControl.ts
+│       │   │   │   └── index.ts
+│       │   │   ├── index.ts
+│       │   │   ├── interfaces
+│       │   │   │   ├── draft-IERC6093.sol
+│       │   │   │   └── index.ts
+│       │   │   ├── token
+│       │   │   │   ├── ERC20
+│       │   │   │   └── index.ts
+│       │   │   └── utils
+│       │   │       ├── index.ts
+│       │   │       ├── introspection
+│       │   │       └── Pausable.ts
+│       │   └── index.ts
+│       ├── common.ts
+│       ├── contracts
+│       │   ├── DelegationLogic.ts
+│       │   ├── GovernanceHub.ts
+│       │   ├── GovernanceStorage.ts
+│       │   ├── index.ts
+│       │   ├── IXcm.ts
+│       │   ├── MyToken.ts
+│       │   ├── ProposalLogic.ts
+│       │   ├── Storage.ts
+│       │   ├── test
+│       │   │   ├── index.ts
+│       │   │   ├── MockReceiver.ts
+│       │   │   ├── MockXCM.sol
+│       │   │   │   ├── index.ts
+│       │   │   │   └── MockXcm.ts
+│       │   │   └── MockXCMExecutor.sol
+│       │   │       ├── index.ts
+│       │   │       └── MockXcmExecutor.ts
+│       │   └── XCMExecutor.sol
+│       │       ├── index.ts
+│       │       └── XcmExecutor.ts
+│       ├── factories
+│       │   ├── @openzeppelin
+│       │   │   ├── contracts
+│       │   │   │   ├── access
+│       │   │   │   ├── index.ts
+│       │   │   │   ├── interfaces
+│       │   │   │   ├── token
+│       │   │   │   └── utils
+│       │   │   └── index.ts
+│       │   ├── contracts
+│       │   │   ├── DelegationLogic__factory.ts
+│       │   │   ├── GovernanceHub__factory.ts
+│       │   │   ├── GovernanceStorage__factory.ts
+│       │   │   ├── index.ts
+│       │   │   ├── IXcm__factory.ts
+│       │   │   ├── MyToken__factory.ts
+│       │   │   ├── ProposalLogic__factory.ts
+│       │   │   ├── Storage__factory.ts
+│       │   │   ├── test
+│       │   │   │   ├── index.ts
+│       │   │   │   ├── MockReceiver__factory.ts
+│       │   │   │   ├── MockXCM.sol
+│       │   │   │   └── MockXCMExecutor.sol
+│       │   │   └── XCMExecutor.sol
+│       │   │       ├── index.ts
+│       │   │       └── XcmExecutor__factory.ts
+│       │   └── index.ts
+│       ├── hardhat.d.ts
+│       └── index.ts
+├── frontend
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── README.md
+│   ├── src
+│   │   ├── App.css
+│   │   ├── App.tsx
+│   │   ├── assets
+│   │   │   └── polkadot-logo.svg
+│   │   ├── components
+│   │   │   ├── ContractData.tsx
+│   │   │   ├── CreateProposal.tsx
+│   │   │   ├── Delegates.tsx
+│   │   │   ├── Mint.tsx
+│   │   │   ├── Navbar.tsx
+│   │   │   ├── Profile.tsx
+│   │   │   ├── ProposalDetail.tsx
+│   │   │   ├── Proposals.tsx
+│   │   │   └── Root.tsx
+│   │   ├── generated.ts
+│   │   ├── index.css
+│   │   ├── main.tsx
+│   │   ├── types.ts
+│   │   ├── vite-env.d.ts
+│   │   └── wagmi-config.ts
+│   ├── tailwind.config.js
+│   ├── tsconfig.json
+│   ├── vite.config.ts
+│   └── wagmi.config.ts
+├── project-structure.txt
+└── README.md
+
+101 directories, 153 files

@@ -8,16 +8,35 @@ export const Delegates = () => {
   const [loading, setLoading] = useState(true);
   const [myDelegate, setMyDelegate] = useState<string | null>(null);
   
-  const { address } = useAccount();
+  const { address, chainId } = useAccount();
   const { writeContract, isPending } = useWriteContract();
 
   // Get the current delegate for the connected user
   useEffect(() => {
     const fetchMyDelegate = async () => {
-      if (address) {
+      if (address && chainId) {
         try {
-          const result = await useReadContract({
-            address: governanceHubAddress[31337] || governanceHubAddress[420420422],
+          const contractAddress = governanceHubAddress[chainId as keyof typeof governanceHubAddress] || governanceHubAddress[420420422];
+          if (!contractAddress) {
+            throw new Error(`Contract address not found for chain ID: ${chainId}`);
+          }
+          
+          // Instead of using getPublicClient, let's just use the account's chainId directly
+          // and use a more direct approach for read operations
+          const { createPublicClient, http } = await import('viem');
+          
+          // Determine the RPC URL based on the detected chainId
+          let rpcUrl = 'https://testnet-passet-hub-eth-rpc.polkadot.io'; // Default for 420420422
+          if (chainId === 31337) {
+            rpcUrl = 'http://127.0.0.1:8545'; // Local hardhat
+          }
+          
+          const publicClient = createPublicClient({
+            transport: http(rpcUrl),
+          });
+          
+          const result = await publicClient.readContract({
+            address: contractAddress,
             abi: governanceHubAbi,
             functionName: "delegates",
             args: [address],
@@ -31,7 +50,7 @@ export const Delegates = () => {
     };
 
     fetchMyDelegate();
-  }, [address]);
+  }, [address, chainId]);
 
   const handleDelegate = async () => {
     if (!selectedDelegate) {
@@ -40,11 +59,16 @@ export const Delegates = () => {
     }
 
     try {
+      const contractAddress = chainId ? governanceHubAddress[chainId as keyof typeof governanceHubAddress] : governanceHubAddress[420420422];
+      if (!contractAddress) {
+        throw new Error(`Contract address not found for chain ID: ${chainId}`);
+      }
+      
       await writeContract({
-        address: governanceHubAddress[31337] || governanceHubAddress[420420422],
+        address: contractAddress,
         abi: governanceHubAbi,
-        functionName: "delegate",
-        args: [selectedDelegate as `0x${string}`],
+        functionName: "delegate" as any,
+        args: [selectedDelegate as `0x${string}`] as any,
       });
       
       // Refresh the delegate after successful delegation
@@ -57,10 +81,16 @@ export const Delegates = () => {
 
   const handleUndelegate = async () => {
     try {
+      const contractAddress = chainId ? governanceHubAddress[chainId as keyof typeof governanceHubAddress] : governanceHubAddress[420420422];
+      if (!contractAddress) {
+        throw new Error(`Contract address not found for chain ID: ${chainId}`);
+      }
+      
       await writeContract({
-        address: governanceHubAddress[31337] || governanceHubAddress[420420422],
+        address: contractAddress,
         abi: governanceHubAbi,
-        functionName: "undelegate",
+        functionName: "undelegate" as any,
+        args: [] as any,
       });
       
       setMyDelegate(null);

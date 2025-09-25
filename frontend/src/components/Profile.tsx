@@ -8,33 +8,32 @@ export const Profile = () => {
   const [delegatesMe, setDelegatesMe] = useState<string[]>([]);
   const [myProposals, setMyProposals] = useState<any[]>([]);
   
-  const { address } = useAccount();
+  const { address, chainId } = useAccount();
   
-  // Fetch user's delegate status
+  // Use wagmi's useReadContract hook instead of calling readContract directly in useEffect
+  const { data: myDelegateData, isLoading: delegateLoading } = useReadContract({
+    address: chainId ? governanceHubAddress[chainId as keyof typeof governanceHubAddress] : governanceHubAddress[420420422],
+    abi: governanceHubAbi,
+    functionName: "delegates",
+    args: [address!],
+    query: {
+      enabled: !!address
+    }
+  }) as { data: string | undefined; isLoading: boolean };
+  
   useEffect(() => {
-    const fetchUserData = async () => {
-      if (address) {
-        try {
-          // Fetch user's delegate
-          const delegateResult = await useReadContract({
-            address: governanceHubAddress[31337] || governanceHubAddress[420420422],
-            abi: governanceHubAbi,
-            functionName: "delegates",
-            args: [address],
-          });
-          
-          setMyDelegate(delegateResult as string);
-          
-          // Calculate voting power (in a real app, this would aggregate across chains)
-          // For now, we'll just show a mock value
-          setVotingPower(100);
-        } catch (err) {
-          console.error("Error fetching user data:", err);
-        }
-      }
-    };
-
-    fetchUserData();
+    if (!delegateLoading && myDelegateData !== undefined) {
+      setMyDelegate(myDelegateData);
+    }
+  }, [myDelegateData, delegateLoading]);
+  
+  // Set voting power after address is available
+  useEffect(() => {
+    if (address) {
+      // Calculate voting power (in a real app, this would aggregate across chains)
+      // For now, we'll just show a mock value
+      setVotingPower(100);
+    }
   }, [address]);
 
   // Mock data for proposals by the user
