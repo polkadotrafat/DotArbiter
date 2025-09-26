@@ -43,10 +43,31 @@ export const Proposals = () => {
                 args: [BigInt(i)],
               });
               
-              if (proposalData) {
+              if (proposalData && Array.isArray(proposalData)) {
+                const [
+                  id,
+                  proposer,
+                  description,
+                  forVotes,
+                  againstVotes,
+                  startTime,
+                  endTime,
+                  quorumRequired,
+                  majorityRequired,
+                  status,
+                ] = proposalData;
+
                 fetchedProposals.push({
-                  id: i,
-                  ...proposalData,
+                  id: Number(id),
+                  proposer,
+                  description,
+                  forVotes,
+                  againstVotes,
+                  startTime,
+                  endTime,
+                  quorumRequired,
+                  majorityRequired,
+                  status,
                 });
               }
             } catch (err) {

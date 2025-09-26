@@ -27,37 +27,69 @@ export const Profile = () => {
     }
   }, [myDelegateData, delegateLoading]);
   
-  // Set voting power after address is available
-  useEffect(() => {
-    if (address) {
-      // Calculate voting power (in a real app, this would aggregate across chains)
-      // For now, we'll just show a mock value
-      setVotingPower(100);
-    }
-  }, [address]);
+  const { data: proposalCountData } = useReadContract({
+    address: chainId ? governanceHubAddress[chainId as keyof typeof governanceHubAddress] : governanceHubAddress[420420422],
+    abi: governanceHubAbi,
+    functionName: "proposalCount",
+  });
 
-  // Mock data for proposals by the user
+  useEffect(() => {
+    const fetchProposals = async () => {
+      if (proposalCountData !== undefined && address) {
+        const count = Number(proposalCountData);
+        const fetchedProposals = [];
+        for (let i = 1; i <= count; i++) {
+          try {
+            const { createPublicClient, http } = await import('viem');
+            const rpcUrl = chainId === 31337 ? 'http://127.0.0.1:8545' : 'https://testnet-passet-hub-eth-rpc.polkadot.io';
+            const publicClient = createPublicClient({ transport: http(rpcUrl) });
+            const proposalData = await publicClient.readContract({
+              address: chainId ? governanceHubAddress[chainId as keyof typeof governanceHubAddress] : governanceHubAddress[420420422],
+              abi: governanceHubAbi,
+              functionName: "proposals",
+              args: [BigInt(i)],
+            });
+            if (proposalData && Array.isArray(proposalData)) {
+              const [
+                id,
+                proposer,
+                description,
+                forVotes,
+                againstVotes,
+                startTime,
+                endTime,
+                quorumRequired,
+                majorityRequired,
+                status,
+              ] = proposalData;
+
+              if (proposer.toLowerCase() === address.toLowerCase()) {
+                console.log("Matching proposal found:", { id: Number(id), proposer, address });
+                fetchedProposals.push({
+                  id: Number(id),
+                  description,
+                  status,
+                  forVotes,
+                  againstVotes,
+                });
+              } else {
+                console.log("Non-matching proposal:", { id: Number(id), proposer, address });
+              }
+            }
+          } catch (err) {
+            console.error(`Error fetching proposal ${i}:`, err);
+          }
+        }
+        setMyProposals(fetchedProposals);
+      }
+    };
+    fetchProposals();
+  }, [proposalCountData, address, chainId]);
+
+  // Set voting power to 1 for the demo
   useEffect(() => {
     if (address) {
-      // Mock proposals data
-      const mockProposals = [
-        {
-          id: 1,
-          title: "Fund parachain development",
-          status: "Active",
-          forVotes: 120,
-          againstVotes: 30,
-        },
-        {
-          id: 2,
-          title: "Update treasury allocation",
-          status: "Passed",
-          forVotes: 200,
-          againstVotes: 15,
-        }
-      ];
-      
-      setMyProposals(mockProposals);
+      setVotingPower(1);
     }
   }, [address]);
 
@@ -125,7 +157,7 @@ export const Profile = () => {
                 {myProposals.map((proposal) => (
                   <div key={proposal.id} className="border border-gray-200 rounded-lg p-4">
                     <div className="flex justify-between items-start">
-                      <h3 className="font-medium text-gray-900">{proposal.title}</h3>
+                      <h3 className="font-medium text-gray-900">{proposal.description}</h3>
                       <span className={`px-2 py-1 rounded-full text-xs ${
                         proposal.status === 'Passed' ? 'bg-green-100 text-green-800' :
                         proposal.status === 'Active' ? 'bg-blue-100 text-blue-800' :

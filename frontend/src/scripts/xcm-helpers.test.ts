@@ -1,9 +1,8 @@
 // frontend/src/utils/xcm-helpers.test.ts
 
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { createRemarkXcmForDotArbiter, createTransferXcmForDotArbiter } from './xcm-helpers';
+import { createRemarkXcmForDotArbiter, createTransferXcmForDotArbiter } from '../frontend/src/scripts/xcm-helpers';
 import { ethers } from 'ethers';
-import { u8aToHex } from '@polkadot/util';
 import { BN } from '@polkadot/util';
 
 // --- JEST MOCK SETUP ---

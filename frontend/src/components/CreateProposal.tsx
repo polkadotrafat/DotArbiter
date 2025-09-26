@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useWriteContract, useAccount } from "wagmi";
-import { governanceHubAbi, governanceHubAddress } from "../generated";
+import { proposalLogicAbi, governanceHubAddress } from "../generated";
 
 export const CreateProposal = () => {
   const [description, setDescription] = useState("");
@@ -32,7 +32,7 @@ export const CreateProposal = () => {
     setActions(newActions);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!description.trim()) {
@@ -41,30 +41,26 @@ export const CreateProposal = () => {
     }
 
     // Prepare actions in the format expected by the contract
-    const formattedActions = actions.map(action => [
+    const formattedActions = actions.map(action => ([
       action.targetParaId,
       action.target,
       action.value ? BigInt(action.value) : 0n,
       action.calldata || "0x",
       action.description
-    ]);
+    ]));
 
-    try {
-      const contractAddress = chainId ? governanceHubAddress[chainId as keyof typeof governanceHubAddress] : governanceHubAddress[420420422];
-      if (!contractAddress) {
-        throw new Error(`Contract address not found for chain ID: ${chainId}`);
-      }
-      
-      await writeContract({
-        address: contractAddress,
-        abi: governanceHubAbi,
-        functionName: "createProposal" as any,
-        args: [description, formattedActions] as any,
-      });
-    } catch (err) {
-      console.error("Error creating proposal:", err);
-      alert("Failed to create proposal. Please check the console for more details.");
+    const contractAddress = chainId ? governanceHubAddress[chainId as keyof typeof governanceHubAddress] : governanceHubAddress[420420422];
+    if (!contractAddress) {
+      alert("Contract address not found for the current chain.");
+      return;
     }
+
+    writeContract({
+      address: contractAddress,
+      abi: proposalLogicAbi,
+      functionName: "createProposal" as any,
+      args: [description, formattedActions] as any,
+    });
   };
 
   return (

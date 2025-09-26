@@ -171,5 +171,4 @@ contract ProposalLogic  is GovernanceStorage {
             proposal.status
         );
     }
-    
 }

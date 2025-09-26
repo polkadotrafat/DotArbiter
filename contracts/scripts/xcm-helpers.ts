@@ -10,7 +10,7 @@ const PASEO_RPC_URL = 'wss://rpc.ibp.network/paseo';
  * @param remarkText The message to be posted on the destination chain.
  * @returns The final bytes payload to be used in the ProposalAction struct.
  */
-export async function createRemarkXcmForDotArbiter(remarkText: string): Promise<string> {
+async function createRemarkXcmForDotArbiter(remarkText: string): Promise<string> {
   const api = await ApiPromise.create({ provider: new WsProvider(PASEO_RPC_URL) });
 
   // 1. Construct the XCM `message` (the instructions)
@@ -48,7 +48,7 @@ export async function createRemarkXcmForDotArbiter(remarkText: string): Promise<
  * @param amount The amount of the token to transfer, in its smallest unit (plancks).
  * @returns A single hex string for the XcmExecutor.sol contract.
  */
-export async function createTransferXcmForDotArbiter(
+async function createTransferXcmForDotArbiter(
   recipientAddress: string,
   amount: bigint
 ): Promise<string> {
@@ -125,3 +125,8 @@ export async function createTransferXcmForDotArbiter(
   console.log("Successfully generated XCM payload for token transfer.");
   return finalCalldata;
 }
+
+module.exports = {
+  createRemarkXcmForDotArbiter,
+  createTransferXcmForDotArbiter,
+};

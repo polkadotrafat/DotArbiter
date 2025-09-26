@@ -1,16 +1,37 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useReadContract, useWriteContract, useAccount } from "wagmi";
-import { governanceHubAbi, governanceHubAddress } from "../generated";
+import { useReadContract, useWriteContract, useAccount, useWaitForTransactionReceipt } from "wagmi";
+import { governanceHubAbi, governanceHubAddress, proposalLogicAbi } from "../generated";
 
 export const ProposalDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [proposal, setProposal] = useState<any>(null);
-  const [votingPower, setVotingPower] = useState<number>(0);
-  const [voteSubmitted, setVoteSubmitted] = useState(false);
+  const [votingPower, setVotingPower] = useState<number>(1);
   
   const { address, chainId } = useAccount();
-  const { writeContract, isPending } = useWriteContract();
+  const { data: hash, writeContract, isPending, error } = useWriteContract();
+
+  useEffect(() => {
+    if (error) {
+      console.error("Error voting:", error);
+      alert("Failed to submit vote. Please check the console for more details.");
+    }
+  }, [error]);
+
+  const { data: hasVoted, isLoading: isLoadingHasVoted } = useReadContract({
+    address: chainId ? governanceHubAddress[chainId as keyof typeof governanceHubAddress] : governanceHubAddress[420420422],
+    abi: governanceHubAbi,
+    functionName: "hasVoterVoted",
+    args: [BigInt(id || "0"), address!],
+    query: {
+      enabled: !!id && !!address,
+    },
+  });
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = 
+    useWaitForTransactionReceipt({ 
+      hash, 
+    })
   
   // Use wagmi's useReadContract hook for fetching proposal data
   const { data: rawProposalData, isLoading, isError } = useReadContract({
@@ -24,40 +45,52 @@ export const ProposalDetail = () => {
   });
 
   useEffect(() => {
-    if (rawProposalData && id) {
+    if (rawProposalData && Array.isArray(rawProposalData) && id) {
+      const [
+        id,
+        proposer,
+        description,
+        forVotes,
+        againstVotes,
+        startTime,
+        endTime,
+        quorumRequired,
+        majorityRequired,
+        status,
+      ] = rawProposalData;
+
       setProposal({
         id: Number(id),
-        ...rawProposalData,
+        proposer,
+        description,
+        forVotes,
+        againstVotes,
+        startTime,
+        endTime,
+        quorumRequired,
+        majorityRequired,
+        status,
       });
     }
   }, [rawProposalData, id]);
 
-  // Mock voting power for now
-  useEffect(() => {
-    setVotingPower(100);
-  }, []);
-
-  const handleVote = async (support: boolean) => {
+  const handleVote = (support: boolean) => {
     if (!proposal || !chainId) return;
     
-    try {
-      const contractAddress = governanceHubAddress[chainId as keyof typeof governanceHubAddress] || governanceHubAddress[420420422];
-      if (!contractAddress) {
-        throw new Error(`Contract address not found for chain ID: ${chainId}`);
-      }
-      
-      await writeContract({
+    const contractAddress = governanceHubAddress[chainId as keyof typeof governanceHubAddress] || governanceHubAddress[420420422];
+    if (!contractAddress) {
+      alert("Contract address not found for the current chain.");
+      return;
+    }
+
+    setTimeout(() => {
+      writeContract({
         address: contractAddress,
-        abi: governanceHubAbi,
+        abi: proposalLogicAbi,
         functionName: "vote" as any,
         args: [BigInt(proposal.id), support, BigInt(votingPower)] as any,
       });
-      
-      setVoteSubmitted(true);
-    } catch (err) {
-      console.error("Error voting:", err);
-      alert("Failed to submit vote. Please check the console for more details.");
-    }
+    }, 0);
   };
 
   if (isLoading) {
@@ -163,27 +196,33 @@ export const ProposalDetail = () => {
             </div>
           </div>
 
-          {address && proposal.status === 1 && !voteSubmitted ? ( // Active status
+          {address && proposal.status === 1 ? ( // Active status
             <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-700 mb-3">You have <span className="font-medium">{votingPower} voting power</span></p>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => handleVote(true)}
-                  disabled={isPending}
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md font-medium transition-colors disabled:opacity-50"
-                >
-                  {isPending ? 'Processing...' : 'Vote For'}
-                </button>
-                <button
-                  onClick={() => handleVote(false)}
-                  disabled={isPending}
-                  className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md font-medium transition-colors disabled:opacity-50"
-                >
-                  {isPending ? 'Processing...' : 'Vote Against'}
-                </button>
-              </div>
+              {hasVoted ? (
+                <p className="text-gray-700">You have already voted on this proposal.</p>
+              ) : (
+                <>
+                  <p className="text-sm text-gray-700 mb-3">You have <span className="font-medium">{votingPower} voting power</span></p>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => handleVote(true)}
+                      disabled={isPending || isConfirming || isLoadingHasVoted}
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md font-medium transition-colors disabled:opacity-50"
+                    >
+                      {isPending ? 'Processing...' : isConfirming ? 'Confirming...' : 'Vote For'}
+                    </button>
+                    <button
+                      onClick={() => handleVote(false)}
+                      disabled={isPending || isConfirming || isLoadingHasVoted}
+                      className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md font-medium transition-colors disabled:opacity-50"
+                    >
+                      {isPending ? 'Processing...' : isConfirming ? 'Confirming...' : 'Vote Against'}
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
-          ) : voteSubmitted ? (
+          ) : isConfirmed ? (
             <div className="bg-green-50 text-green-700 p-4 rounded-lg">
               <p>Your vote has been submitted successfully!</p>
             </div>
@@ -206,7 +245,7 @@ export const ProposalDetail = () => {
 
         <div className="p-6">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Actions</h2>
-          <p>Actions would be listed here. (Implementation for cross-chain actions would go here)</p>
+          <p className="text-gray-600">Proposal actions are not displayed in this demo.</p>
         </div>
       </div>
 

@@ -1,5 +1,35 @@
 import { Link } from "react-router-dom";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useConnect, useAccount, useDisconnect } from "wagmi";
+
+const CustomConnectButton = () => {
+  const { connect, connectors } = useConnect();
+  const { address, isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
+
+  const injectedConnector = connectors.find(
+    (connector) => connector.id === "io.metamask"
+  );
+
+  if (isConnected) {
+    return (
+      <div>
+        <span className="mr-4">{`${address?.substring(0, 6)}...${address?.substring(address.length - 4)}`}</span>
+        <button onClick={() => disconnect()} className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-md font-medium transition-colors">
+          Disconnect
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <button 
+      onClick={() => injectedConnector && connect({ connector: injectedConnector })}
+      className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-md font-medium transition-colors"
+    >
+      Connect with MetaMask
+    </button>
+  );
+};
 
 export const Navbar = () => {
   return (
@@ -34,7 +64,7 @@ export const Navbar = () => {
           </div>
           
           <div className="flex items-center">
-            <ConnectButton showBalance={false} />
+            <CustomConnectButton />
           </div>
         </div>
       </div>

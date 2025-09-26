@@ -1,9 +1,7 @@
 import { StrictMode } from "react";
-import "@rainbow-me/rainbowkit/styles.css";
 import { createRoot } from "react-dom/client";
 import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import { config, chains } from "./wagmi-config";
@@ -56,9 +54,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
-          <RouterProvider router={router} />
-        </RainbowKitProvider>
+        <RouterProvider router={router} />
       </QueryClientProvider>
     </WagmiProvider>
   </StrictMode>
