@@ -43,23 +43,21 @@ contract ProposalLogic  is GovernanceStorage {
     // ========================================================================
 
     /// @notice Cast a vote on a proposal
-    function vote(uint256 proposalId, bool support, uint256 votingWeight) external {
+    function vote(uint256 proposalId, bool support) external {
         Storage.Proposal storage p = proposals[proposalId];
         
         require(p.id != 0, "Proposal does not exist");
         require(p.status == Storage.ProposalStatus.Active, "Proposal not active");
         require(block.timestamp <= p.endTime, "Voting period ended");
-        require(votingWeight > 0, "No voting power");
-
-        // --- NEW AND CRITICAL FIX ---
-        // Rule 1: A user who has already delegated their power cannot vote directly.
+        
+        // Security check: Ensure user has not delegated their vote
         require(delegates[msg.sender] == address(0), "User has delegated their vote");
-        // --- END OF FIX ---
-
-        // The logic for the effectiveVoter is now simpler, because we know
-        // the msg.sender is the one voting.
+        
         address voter = msg.sender;
         require(!p.hasVoted[voter], "Already voted");
+
+        // FIX: Voting weight is now a constant `1`, not a user input.
+        uint256 votingWeight = 1;
 
         p.hasVoted[voter] = true;
         p.voteChoice[voter] = support;
@@ -74,46 +72,40 @@ contract ProposalLogic  is GovernanceStorage {
     }
 
     /// @notice Allows a delegate to vote on behalf of their delegators.
-    /// @param delegators An array of addresses that have delegated to the msg.sender.
-    function voteByProxy(
-        uint256 proposalId,
-        bool support,
-        address[] calldata delegators,
-        uint256[] calldata votingWeights
-    ) external {
+    function voteByProxy(uint256 proposalId, bool support) external {
         Storage.Proposal storage p = proposals[proposalId];
         
         require(p.id != 0, "Proposal does not exist");
         require(p.status == Storage.ProposalStatus.Active, "Proposal not active");
         require(block.timestamp <= p.endTime, "Voting period ended");
-        require(delegators.length == votingWeights.length, "Array length mismatch");
 
         address delegatee = msg.sender;
-        require(!p.hasVoted[delegatee], "Delegate has already voted for themself");
+        require(!p.hasVoted[delegatee], "Delegate has already voted");
+        
+        address[] storage delegatorList = delegatorsOf[delegatee];
 
-        uint256 totalDelegatedWeight = 0;
+        uint256 totalWeight = 1; // Start with the delegate's own vote.
 
-        for(uint i = 0; i < delegators.length; i++) {
-            address delegator = delegators[i];
-            // Verify that this user has indeed delegated to the caller
-            require(delegates[delegator] == delegatee, "Not a valid delegator");
-            // Verify this delegator's vote hasn't already been cast
-            require(!p.hasVoted[delegator], "Delegator vote already cast");
+        for(uint i = 0; i < delegatorList.length; i++) {
+            address delegator = delegatorList[i];
 
-            p.hasVoted[delegator] = true; // Mark the delegator as having voted (via proxy)
-            p.voteChoice[delegator] = support; // Record their choice
-            totalDelegatedWeight += votingWeights[i];
+            if (!p.hasVoted[delegator]) {
+                p.hasVoted[delegator] = true;
+                p.voteChoice[delegator] = support;
+                totalWeight++;
+            }
         }
 
-        // Add the total delegated weight to the tally
+        p.hasVoted[delegatee] = true;
+        p.voteChoice[delegatee] = support;
+
         if (support) {
-            p.forVotes += totalDelegatedWeight;
+            p.forVotes += totalWeight;
         } else {
-            p.againstVotes += totalDelegatedWeight;
+            p.againstVotes += totalWeight;
         }
-
-        // The delegate's address is the one who cast the vote
-        emit Storage.VoteCast(proposalId, delegatee, support, totalDelegatedWeight);
+        
+        emit Storage.VoteCast(proposalId, delegatee, support, totalWeight);
     }
 
     /// @notice Tally votes and update proposal status

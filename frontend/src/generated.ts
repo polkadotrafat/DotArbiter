@@ -47,6 +47,16 @@ export const delegationLogicAbi = [
   },
   {
     type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'delegatorsOf',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
     name: 'functionImplementations',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -57,6 +67,23 @@ export const delegationLogicAbi = [
     inputs: [{ name: 'user', internalType: 'address', type: 'address' }],
     name: 'getDelegate',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: 'delegatee', internalType: 'address', type: 'address' },
+      { name: 'index', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getDelegatorAtIndex',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'delegatee', internalType: 'address', type: 'address' }],
+    name: 'getDelegatorCount',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
     stateMutability: 'view',
   },
   {
@@ -115,7 +142,7 @@ export const delegationLogicAbi = [
  *
  */
 export const delegationLogicAddress = {
-  420420422: '0xFF3260a3aab725b4BbBf9A94A57A5718196E5a73',
+  420420422: '0x8b0348a2EFA87dcBF2B5a179149E21708f62342f',
 } as const
 
 /**
@@ -140,6 +167,16 @@ export const governanceHubAbi = [
     type: 'function',
     inputs: [{ name: '', internalType: 'address', type: 'address' }],
     name: 'delegates',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'delegatorsOf',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
     stateMutability: 'view',
   },
@@ -220,7 +257,7 @@ export const governanceHubAbi = [
  *
  */
 export const governanceHubAddress = {
-  420420422: '0x0fD55d06B382C72d8b95f5Bf9Ae1682D079B79bB',
+  420420422: '0xa3D2d2C95De16864BF84A4be91FeC3C66997abdf',
 } as const
 
 /**
@@ -351,6 +388,16 @@ export const proposalLogicAbi = [
   },
   {
     type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'delegatorsOf',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     inputs: [{ name: '', internalType: 'bytes4', type: 'bytes4' }],
     name: 'functionImplementations',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -424,7 +471,6 @@ export const proposalLogicAbi = [
     inputs: [
       { name: 'proposalId', internalType: 'uint256', type: 'uint256' },
       { name: 'support', internalType: 'bool', type: 'bool' },
-      { name: 'votingWeight', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'vote',
     outputs: [],
@@ -435,8 +481,6 @@ export const proposalLogicAbi = [
     inputs: [
       { name: 'proposalId', internalType: 'uint256', type: 'uint256' },
       { name: 'support', internalType: 'bool', type: 'bool' },
-      { name: 'delegators', internalType: 'address[]', type: 'address[]' },
-      { name: 'votingWeights', internalType: 'uint256[]', type: 'uint256[]' },
     ],
     name: 'voteByProxy',
     outputs: [],
@@ -448,7 +492,7 @@ export const proposalLogicAbi = [
  *
  */
 export const proposalLogicAddress = {
-  420420422: '0x8ef7455e8d01C85Af8ed9CFcc0274f4125737e2f',
+  420420422: '0x644050Bd1200cf3692682d90BF145E84080dc0B4',
 } as const
 
 /**
@@ -458,6 +502,134 @@ export const proposalLogicConfig = {
   address: proposalLogicAddress,
   abi: proposalLogicAbi,
 } as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Storage
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const storageAbi = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'delegator',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'fromDelegate',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'toDelegate',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'DelegateChanged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'proposalId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'proposer',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'description',
+        internalType: 'string',
+        type: 'string',
+        indexed: false,
+      },
+      {
+        name: 'startTime',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'endTime',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'ProposalCreated',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'proposalId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      { name: 'success', internalType: 'bool', type: 'bool', indexed: false },
+    ],
+    name: 'ProposalExecuted',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'proposalId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'newStatus',
+        internalType: 'enum Storage.ProposalStatus',
+        type: 'uint8',
+        indexed: true,
+      },
+    ],
+    name: 'ProposalStatusChanged',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'proposalId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'voter',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      { name: 'support', internalType: 'bool', type: 'bool', indexed: false },
+      {
+        name: 'weight',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'VoteCast',
+  },
+] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // XcmExecutor
@@ -507,6 +679,16 @@ export const xcmExecutorAbi = [
     type: 'function',
     inputs: [{ name: '', internalType: 'address', type: 'address' }],
     name: 'delegates',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [
+      { name: '', internalType: 'address', type: 'address' },
+      { name: '', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'delegatorsOf',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
     stateMutability: 'view',
   },
@@ -598,7 +780,7 @@ export const xcmExecutorAbi = [
  *
  */
 export const xcmExecutorAddress = {
-  420420422: '0x8397E32E7f43E75f5BfF7D234905Df34Cb08ea8E',
+  420420422: '0xC7c262350d5A2bA2f3954aDE5Cb45Ff397969626',
 } as const
 
 /**

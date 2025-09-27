@@ -18,4 +18,9 @@ abstract contract GovernanceStorage {
     
     // A mapping from a function selector to its implementation contract
     mapping(bytes4 => address) public functionImplementations;
+
+    // Maps a delegatee to the list of their delegators.
+    mapping(address => address[]) public delegatorsOf;
+    // Maps a delegator to their index in their delegatee's array.
+    mapping(address => uint256) internal _delegatorIndex;
 }

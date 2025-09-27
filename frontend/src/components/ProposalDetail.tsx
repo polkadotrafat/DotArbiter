@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useReadContract, useWriteContract, useAccount, useWaitForTransactionReceipt } from "wagmi";
-import { governanceHubAbi, governanceHubAddress, proposalLogicAbi } from "../generated";
+import { governanceHubAbi, governanceHubAddress, proposalLogicAbi, delegationLogicAbi } from "../generated";
 
 export const ProposalDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -11,12 +11,79 @@ export const ProposalDetail = () => {
   const { address, chainId } = useAccount();
   const { data: hash, writeContract, isPending, error } = useWriteContract();
 
+  const [myDelegate, setMyDelegate] = useState<string | null>(null);
+
+  const { data: myDelegateData, isLoading: delegateLoading } = useReadContract({
+    address: chainId ? governanceHubAddress[chainId as keyof typeof governanceHubAddress] : governanceHubAddress[420420422],
+    abi: delegationLogicAbi,
+    functionName: "getDelegate",
+    args: [address!],
+    query: {
+      enabled: !!address,
+    },
+  });
+
   useEffect(() => {
-    if (error) {
-      console.error("Error voting:", error);
-      alert("Failed to submit vote. Please check the console for more details.");
+    if (!delegateLoading && myDelegateData !== undefined) {
+      setMyDelegate(myDelegateData as string);
     }
-  }, [error]);
+  }, [myDelegateData, delegateLoading]);
+
+  const userHasDelegated = myDelegate && myDelegate !== "0x0000000000000000000000000000000000000000";
+
+  useEffect(() => {
+    const calculateVotingPower = async () => {
+      if (!address || !chainId) return;
+
+      if (userHasDelegated) {
+        setVotingPower(0);
+        return;
+      }
+
+      const { createPublicClient, http } = await import('viem');
+      let rpcUrl = 'https://testnet-passet-hub-eth-rpc.polkadot.io'; // Default for 420420422
+      if (chainId === 31337) {
+        rpcUrl = 'http://127.0.0.1:8545'; // Local hardhat
+      }
+      
+      const publicClient = createPublicClient({
+        transport: http(rpcUrl),
+      });
+
+      const delegateChangedEvents = await publicClient.getLogs({
+        address: chainId ? governanceHubAddress[chainId as keyof typeof governanceHubAddress] : governanceHubAddress[420420422],
+        event: {
+          type: 'event',
+          name: 'DelegateChanged',
+          inputs: [
+            { type: 'address', name: 'delegator', indexed: true },
+            { type: 'address', name: 'fromDelegate', indexed: true },
+            { type: 'address', name: 'toDelegate', indexed: true },
+          ],
+        },
+        fromBlock: 0n,
+        toBlock: 'latest',
+      });
+
+      const delegations = new Map<string, string>();
+      for (const event of delegateChangedEvents) {
+        if (event.args.delegator && event.args.toDelegate) {
+          delegations.set(event.args.delegator.toLowerCase(), event.args.toDelegate.toLowerCase());
+        }
+      }
+
+      let power = 1;
+      for (const [delegator, delegate] of delegations.entries()) {
+        if (delegate === address.toLowerCase()) {
+          power++;
+        }
+      }
+
+      setVotingPower(power);
+    };
+
+    calculateVotingPower();
+  }, [address, chainId, userHasDelegated]);
 
   const { data: hasVoted, isLoading: isLoadingHasVoted } = useReadContract({
     address: chainId ? governanceHubAddress[chainId as keyof typeof governanceHubAddress] : governanceHubAddress[420420422],
@@ -200,6 +267,8 @@ export const ProposalDetail = () => {
             <div className="bg-gray-50 p-4 rounded-lg">
               {hasVoted ? (
                 <p className="text-gray-700">You have already voted on this proposal.</p>
+              ) : userHasDelegated ? (
+                <p className="text-gray-700">You have delegated your vote and cannot vote directly.</p>
               ) : (
                 <>
                   <p className="text-sm text-gray-700 mb-3">You have <span className="font-medium">{votingPower} voting power</span></p>

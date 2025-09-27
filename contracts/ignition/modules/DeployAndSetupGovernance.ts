@@ -1,49 +1,58 @@
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
+import { ethers } from "ethers";
+// We need to import the `artifacts` object from Hardhat itself
+import hre from "hardhat";
 
+// ============================================================================
+// --- Step 1: Define the Helper Function (Outside the Module) ---
+// ============================================================================
+const getSelectors = (abi: any[]): string[] => {
+  const anInterface = new ethers.Interface(abi);
+  const selectors: string[] = [];
+  anInterface.forEachFunction((func) => {
+    selectors.push(func.selector);
+  });
+  return selectors;
+};
+
+
+// ============================================================================
+// --- Step 2: Prepare All Data *Before* Building the Module ---
+// ============================================================================
+// HRE (Hardhat Runtime Environment) gives us access to the compiled artifacts
+const proposalLogicArtifact = hre.artifacts.readArtifactSync("ProposalLogic");
+const delegationLogicArtifact = hre.artifacts.readArtifactSync("DelegationLogic");
+const xcmExecutorArtifact = hre.artifacts.readArtifactSync("XcmExecutor");
+
+const proposalSelectors = getSelectors(proposalLogicArtifact.abi);
+const delegationSelectors = getSelectors(delegationLogicArtifact.abi);
+const xcmExecutorSelectors = getSelectors(xcmExecutorArtifact.abi);
+
+
+// ============================================================================
+// --- Step 3: Build the Module Using the Pre-calculated Data ---
+// ============================================================================
 const DeployAndSetupGovernanceModule = buildModule("DeployAndSetupGovernance", (m) => {
-  // Deploy the implementation contracts first
+  // 1. Deploy contracts (same as before)
   const proposalLogic = m.contract("ProposalLogic");
   const delegationLogic = m.contract("DelegationLogic");
   const xcmExecutor = m.contract("XcmExecutor");
-
-  // Deploy the Governance Hub (proxy contract)
   const governanceHub = m.contract("GovernanceHub");
 
-  // Setup the implementations
-  const proposalLogicSelectors = [
-    "0xc7f758a8", // createProposal(string,(uint32,address,uint256,bytes,string)[])
-    "0xc9c18f89", // vote(uint256,bool,uint256)
-    "0x35657447", // voteByProxy(uint256,bool,address[],uint256[])
-    "0xd46a5d7e", // tallyProposal(uint256)
-    "0x7daff299", // getProposal(uint256)
-  ];
-
-  const delegationLogicSelectors = [
-    "0x5c19a95c", // delegate(address)
-    "0xda35c664", // undelegate()
-    "0x544d8564", // getDelegate(address)
-    "0x90ae9337", // hasDelegated(address)
-  ];
-
-  const xcmExecutorSelectors = [
-    "0xb3b3a232", // executeProposal(uint256)
-    "0x0d61b519", // estimateXcmWeight(bytes)
-    "0x4f4a7e88", // isXcmAvailable()
-    "0x9a82171b", // encodeParachainDestination(uint32)
-  ];
-
+  // 2. Combine all selectors and implementations into single arrays
   const allSelectors = [
-    ...proposalLogicSelectors,
-    ...delegationLogicSelectors,
+    ...proposalSelectors,
+    ...delegationSelectors,
     ...xcmExecutorSelectors,
   ];
 
   const allImplementations = [
-    ...Array(proposalLogicSelectors.length).fill(proposalLogic),
-    ...Array(delegationLogicSelectors.length).fill(delegationLogic),
-    ...Array(xcmExecutorSelectors.length).fill(xcmExecutor),
+    ...proposalSelectors.map(() => proposalLogic),
+    ...delegationSelectors.map(() => delegationLogic),
+    ...xcmExecutorSelectors.map(() => xcmExecutor),
   ];
 
+  // 3. Make a single, unambiguous call to setImplementations
   m.call(governanceHub, "setImplementations", [allSelectors, allImplementations]);
 
   return { governanceHub, proposalLogic, delegationLogic, xcmExecutor };

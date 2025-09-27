@@ -57,22 +57,16 @@ contract GovernanceHub is GovernanceStorage {
     /// @notice The fallback function is the heart of the proxy. It catches all
     /// calls to the hub that don't match other function signatures.
     fallback() external payable {
-        // 1. Look up the implementation address for the incoming function call
         address implementation = functionImplementations[msg.sig];
-
-        // 2. Delegate the execution to that implementation contract
         _delegate(implementation);
     }
 
-    /// @notice The receive function handles plain Ether transfers to the hub.
-    /// It delegates to the fallback function to maintain consistent behavior.
+    /// @notice The receive function handles PLAIN ETHER transfers to the hub.
+    /// @dev It should be simple and just accept the funds. It does not need to delegate.
     receive() external payable {
-        // For simplicity, we can just route to the fallback logic.
-        // A specific implementation could be set for `msg.sig` == 0x00000000 if needed.
-        address implementation = functionImplementations[msg.sig];
-        _delegate(implementation);
+        // This function is now empty. Its only purpose is to allow the contract
+        // to receive Ether directly. No delegation is needed for a simple transfer.
     }
-
     /// @dev Internal helper function to perform the low-level delegatecall.
     /// @param implementation The address of the contract whose code will be executed.
     function _delegate(address implementation) internal {

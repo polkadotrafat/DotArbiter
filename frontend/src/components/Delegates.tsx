@@ -4,21 +4,18 @@ import { delegationLogicAbi, governanceHubAddress } from "../generated";
 
 const hardcodedDelegates = [
   {
-    address: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    address: "0x09ef97ea756496cd7a8E6a045B033A17A0B2B4A0",
     name: "Alice",
-    votesReceived: 125,
     description: "Active community member with experience in governance"
   },
   {
-    address: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+    address: "0xB6151687Df2497AF69c0b2eB35Bbee18B9F62C06",
     name: "Bob",
-    votesReceived: 89,
     description: "Technical expert focused on protocol development"
   },
   {
-    address: "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
+    address: "0x3cb6A70E6B60dC5b7d614dDa937AAe170f9D3c79",
     name: "Carol",
-    votesReceived: 210,
     description: "Long-term contributor with deep understanding of the ecosystem"
   }
 ];
@@ -32,7 +29,7 @@ export const Delegates = () => {
   const { data: myDelegateData, isLoading: delegateLoading } = useReadContract({
     address: chainId ? governanceHubAddress[chainId as keyof typeof governanceHubAddress] : governanceHubAddress[420420422],
     abi: delegationLogicAbi,
-    functionName: "delegates",
+    functionName: "getDelegate",
     args: [address!],
     query: {
       enabled: !!address
@@ -75,6 +72,8 @@ export const Delegates = () => {
     });
   };
 
+  const userHasDelegated = myDelegate && myDelegate !== "0x0000000000000000000000000000000000000000";
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Delegates</h1>
@@ -83,7 +82,7 @@ export const Delegates = () => {
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Your Delegation Status</h2>
           
-          {myDelegate && myDelegate !== "0x0000000000000000000000000000000000000000" ? (
+          {userHasDelegated ? (
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <p className="text-gray-600">You have delegated your voting power to:</p>
@@ -123,7 +122,7 @@ export const Delegates = () => {
               
               <p className="text-gray-600 mb-4">{delegate.description}</p>
               
-              {address && myDelegate !== delegate.address && (
+              {address && !userHasDelegated && (
                 <button
                   onClick={() => handleDelegate(delegate.address)}
                   disabled={isPending}
@@ -131,6 +130,10 @@ export const Delegates = () => {
                 >
                   {isPending ? 'Processing...' : 'Delegate Vote'}
                 </button>
+              )}
+              
+              {address && userHasDelegated && myDelegate === delegate.address && (
+                <p className="mt-4 text-center text-gray-500 font-medium">You have delegated to this user</p>
               )}
             </div>
           </div>

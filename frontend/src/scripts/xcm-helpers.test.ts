@@ -1,7 +1,7 @@
 // frontend/src/utils/xcm-helpers.test.ts
 
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { createRemarkXcmForDotArbiter, createTransferXcmForDotArbiter } from '../frontend/src/scripts/xcm-helpers';
+import { createRemarkXcmForDotArbiter, createTransferXcmForDotArbiter } from '../utils/xcm-helpers';
 import { ethers } from 'ethers';
 import { BN } from '@polkadot/util';
 
