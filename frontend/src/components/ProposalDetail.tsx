@@ -177,6 +177,57 @@ export const ProposalDetail = () => {
     }, 0);
   };
 
+  const handleVoteByProxy = (support: boolean) => {
+    if (!proposal || !chainId) return;
+    
+    const contractAddress = governanceHubAddress[chainId as keyof typeof governanceHubAddress] || governanceHubAddress[420420422];
+    if (!contractAddress) {
+      alert("Contract address not found for the current chain.");
+      return;
+    }
+
+    writeContract({
+      address: contractAddress,
+      abi: proposalLogicAbi,
+      functionName: "voteByProxy",
+      args: [BigInt(proposal.id), support],
+    });
+  };
+
+  const handleTallyProposal = () => {
+    if (!proposal || !chainId) return;
+    
+    const contractAddress = governanceHubAddress[chainId as keyof typeof governanceHubAddress] || governanceHubAddress[420420422];
+    if (!contractAddress) {
+      alert("Contract address not found for the current chain.");
+      return;
+    }
+
+    writeContract({
+      address: contractAddress,
+      abi: proposalLogicAbi,
+      functionName: "tallyProposal",
+      args: [BigInt(proposal.id)],
+    });
+  };
+
+  const handleExecuteProposal = () => {
+    if (!proposal || !chainId) return;
+    
+    const contractAddress = governanceHubAddress[chainId as keyof typeof governanceHubAddress] || governanceHubAddress[420420422];
+    if (!contractAddress) {
+      alert("Contract address not found for the current chain.");
+      return;
+    }
+
+    writeContract({
+      address: contractAddress,
+      abi: xcmExecutorAbi,
+      functionName: "executeProposal",
+      args: [BigInt(proposal.id)],
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -307,6 +358,28 @@ export const ProposalDetail = () => {
                   </div>
                 </>
               )}
+
+              {isDelegate && !hasVoted && (
+                <div className="bg-gray-100 p-3 rounded-lg mt-4">
+                  <p className="text-sm text-gray-700 mb-3">You are a delegate. You can vote by proxy.</p>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => handleVoteByProxy(true)}
+                      disabled={isPending || isConfirming || isLoadingHasVoted}
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md font-medium transition-colors disabled:opacity-50"
+                    >
+                      {isPending ? 'Processing...' : isConfirming ? 'Confirming...' : 'Vote For by Proxy'}
+                    </button>
+                    <button
+                      onClick={() => handleVoteByProxy(false)}
+                      disabled={isPending || isConfirming || isLoadingHasVoted}
+                      className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md font-medium transition-colors disabled:opacity-50"
+                    >
+                      {isPending ? 'Processing...' : isConfirming ? 'Confirming...' : 'Vote Against by Proxy'}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ) : isConfirmed ? (
             <div className="bg-green-50 text-green-700 p-4 rounded-lg">
@@ -329,88 +402,7 @@ export const ProposalDetail = () => {
           )}
         </div>
 
-        <div className="p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Actions</h2>
-          <p className="text-gray-600">Proposal actions are not displayed in this demo.</p>
-        </div>
-      </div>
-
-  const handleVoteByProxy = (support: boolean) => {
-    if (!proposal || !chainId) return;
-    
-    const contractAddress = governanceHubAddress[chainId as keyof typeof governanceHubAddress] || governanceHubAddress[420420422];
-    if (!contractAddress) {
-      alert("Contract address not found for the current chain.");
-      return;
-    }
-
-    writeContract({
-      address: contractAddress,
-      abi: proposalLogicAbi,
-      functionName: "voteByProxy",
-      args: [BigInt(proposal.id), support],
-    });
-  };
-
-  const handleTallyProposal = () => {
-    if (!proposal || !chainId) return;
-    
-    const contractAddress = governanceHubAddress[chainId as keyof typeof governanceHubAddress] || governanceHubAddress[420420422];
-    if (!contractAddress) {
-      alert("Contract address not found for the current chain.");
-      return;
-    }
-
-    writeContract({
-      address: contractAddress,
-      abi: proposalLogicAbi,
-      functionName: "tallyProposal",
-      args: [BigInt(proposal.id)],
-    });
-  };
-
-  const handleExecuteProposal = () => {
-    if (!proposal || !chainId) return;
-    
-    const contractAddress = governanceHubAddress[chainId as keyof typeof governanceHubAddress] || governanceHubAddress[420420422];
-    if (!contractAddress) {
-      alert("Contract address not found for the current chain.");
-      return;
-    }
-
-    writeContract({
-      address: contractAddress,
-      abi: xcmExecutorAbi,
-      functionName: "executeProposal",
-      args: [BigInt(proposal.id)],
-    });
-  };
-
-  // ...
-
-          {isDelegate && !hasVoted && proposal.status === 1 && (
-            <div className="bg-gray-50 p-4 rounded-lg mt-4">
-              <p className="text-sm text-gray-700 mb-3">You are a delegate. You can vote by proxy.</p>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => handleVoteByProxy(true)}
-                  disabled={isPending || isConfirming || isLoadingHasVoted}
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md font-medium transition-colors disabled:opacity-50"
-                >
-                  {isPending ? 'Processing...' : isConfirming ? 'Confirming...' : 'Vote For by Proxy'}
-                </button>
-                <button
-                  onClick={() => handleVoteByProxy(false)}
-                  disabled={isPending || isConfirming || isLoadingHasVoted}
-                  className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md font-medium transition-colors disabled:opacity-50"
-                >
-                  {isPending ? 'Processing...' : isConfirming ? 'Confirming...' : 'Vote Against by Proxy'}
-                </button>
-              </div>
-            </div>
-          )}
-
-          {proposal.status === 1 && new Date() > new Date(proposal.endTime * 1000) && (
+        {proposal.status === 1 && new Date() > new Date(proposal.endTime * 1000) && (
             <div className="mt-6 bg-white rounded-lg shadow-md p-6">
               <h2 className="text-lg font-semibold text-gray-800 mb-4">Tally Proposal</h2>
               <p className="text-gray-600 mb-4">The voting period for this proposal has ended. It can now be tallied.</p>
@@ -423,6 +415,12 @@ export const ProposalDetail = () => {
               </button>
             </div>
           )}
+
+        <div className="p-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Actions</h2>
+          <p className="text-gray-600">Proposal actions are not displayed in this demo.</p>
+        </div>
+      </div>
 
       {proposal.status === 2 && address && ( // Passed status
         <div className="mt-6 bg-white rounded-lg shadow-md p-6">
