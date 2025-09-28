@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 /// @dev The on-chain address of the XCM (Cross-Consensus Messaging) precompile.
 address constant XCM_PRECOMPILE_ADDRESS = address(0xA0000);
 
+
 /// @title XCM Precompile Interface
 /// @notice A low-level interface for interacting with `pallet_xcm`.
 /// It forwards calls directly to the corresponding dispatchable functions,

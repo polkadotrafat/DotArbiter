@@ -11,13 +11,16 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "@nomicfoundation/hardhat-ignition": "^0.15.12",
+    "@nomicfoundation/hardhat-ignition": "^0.15.13",
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@nomicfoundation/hardhat-viem": "^2.0.6",
     "@parity/hardhat-polkadot": "^0.1.8",
+    "@types/bn.js": "^5.2.0",
     "@types/chai-as-promised": "^7.1.8",
+    "@types/concat-stream": "^2.0.3",
+    "@types/ws": "^8.18.1",
     "chai": "^4.5.0",
-    "hardhat": "2.24.1",
+    "hardhat": "^2.26.3",
     "solc": "0.8.28",
     "typescript": "~5.0.4",
     "viem": "^2.31.7"
@@ -26,6 +29,7 @@
     "@polkadot-api/descriptors": "file:.papi/descriptors",
     "@polkadot/api": "^16.4.8",
     "@polkadot/util": "^13.5.6",
-    "polkadot-api": "^1.18.0"
+    "polkadot-api": "^1.18.0",
+    "ws": "^8.18.3"
   }
 }

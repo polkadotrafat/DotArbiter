@@ -21,7 +21,11 @@
             }
           },
           "resolc": {
-            "compilerSource": "npm"
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
           }
         }
       },
@@ -37,8 +41,8 @@
       ]
     },
     "/Users/rafat/code/hackathons/DotArbiter/contracts/contracts/Storage.sol": {
-      "lastModificationDate": 1758683395717,
-      "contentHash": "7e5adbc9cbdd144f89c413b5538ef320",
+      "lastModificationDate": 1759026758549,
+      "contentHash": "284abc9253a7a9f2eabb4f19285fcb4c",
       "sourceName": "contracts/Storage.sol",
       "solcConfig": {
         "version": "0.8.28",
@@ -56,7 +60,11 @@
             }
           },
           "resolc": {
-            "compilerSource": "npm"
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
           }
         }
       },
@@ -88,7 +96,11 @@
             }
           },
           "resolc": {
-            "compilerSource": "npm"
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
           }
         }
       },
@@ -103,8 +115,8 @@
       ]
     },
     "/Users/rafat/code/hackathons/DotArbiter/contracts/contracts/test/MockXCMExecutor.sol": {
-      "lastModificationDate": 1758514333474,
-      "contentHash": "ffb8e3608b3b5301e2413fa1c3ae9445",
+      "lastModificationDate": 1759027367416,
+      "contentHash": "f6fd39001d337369fa12acac9412912f",
       "sourceName": "contracts/test/MockXCMExecutor.sol",
       "solcConfig": {
         "version": "0.8.28",
@@ -122,7 +134,11 @@
             }
           },
           "resolc": {
-            "compilerSource": "npm"
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
           }
         }
       },
@@ -138,8 +154,8 @@
       ]
     },
     "/Users/rafat/code/hackathons/DotArbiter/contracts/contracts/XCMExecutor.sol": {
-      "lastModificationDate": 1758683596737,
-      "contentHash": "bd251ff8dc629268171b3f17dc5217f9",
+      "lastModificationDate": 1759032331404,
+      "contentHash": "1d604122b92e0bdcafd7801eef82d382",
       "sourceName": "contracts/XCMExecutor.sol",
       "solcConfig": {
         "version": "0.8.28",
@@ -157,7 +173,11 @@
             }
           },
           "resolc": {
-            "compilerSource": "npm"
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
           }
         }
       },
@@ -174,8 +194,8 @@
       ]
     },
     "/Users/rafat/code/hackathons/DotArbiter/contracts/contracts/IXcm.sol": {
-      "lastModificationDate": 1758355748309,
-      "contentHash": "1a4763f5b78f0b9162addcaa90a92af4",
+      "lastModificationDate": 1759031465153,
+      "contentHash": "7a3e16acf4683a26bbb55c15dad7efb3",
       "sourceName": "contracts/IXcm.sol",
       "solcConfig": {
         "version": "0.8.28",
@@ -193,7 +213,11 @@
             }
           },
           "resolc": {
-            "compilerSource": "npm"
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
           }
         }
       },
@@ -225,7 +249,11 @@
             }
           },
           "resolc": {
-            "compilerSource": "npm"
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
           }
         }
       },
@@ -259,7 +287,11 @@
             }
           },
           "resolc": {
-            "compilerSource": "npm"
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
           }
         }
       },
@@ -294,7 +326,11 @@
             }
           },
           "resolc": {
-            "compilerSource": "npm"
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
           }
         }
       },
@@ -328,7 +364,11 @@
             }
           },
           "resolc": {
-            "compilerSource": "npm"
+            "version": "latest",
+            "compilerSource": "npm",
+            "settings": {
+              "optimizer": {}
+            }
           }
         }
       },

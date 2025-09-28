@@ -20,20 +20,11 @@ contract XcmExecutor is GovernanceStorage {
     // ========================================================================
 
     /// @notice Execute a passed proposal via XCM
-    function executeProposal(uint256 proposalId) external payable {
+    function executeProposal(uint256 proposalId) external {
         Storage.Proposal storage p = proposals[proposalId];
         
         require(p.id != 0, "Proposal does not exist");
         require(p.status == Storage.ProposalStatus.Passed, "Proposal not passed");
-
-        // --- CHECKS ---
-        // NEW: Calculate the total ETH required by all actions in the proposal
-        uint256 totalValueRequired = 0;
-        for (uint256 i = 0; i < p.actions.length; i++) {
-            totalValueRequired += p.actions[i].value;
-        }
-        // Ensure the caller sent the exact amount of ETH required.
-        require(msg.value == totalValueRequired, "Incorrect ETH value sent");
 
         // EFFECT: Prevent re-entrancy by changing state before interaction
         p.status = Storage.ProposalStatus.Executed;
@@ -44,11 +35,9 @@ contract XcmExecutor is GovernanceStorage {
             Storage.ProposalAction memory action = p.actions[i];
             
             bool success;
-            if (action.targetParaId == 0) {
+            if (action.targetParaId == 0 && action.target != address(1)) {
                 // INTERACTION: Pass value explicitly to the local execution helper
-                // NOTE: For simplicity, we assume the full msg.value is for the first local action.
-                // A more complex system might specify value per action.
-                success = _executeLocal(action.target, msg.value, action.calldata_);
+                success = _executeLocal(action.target, action.value, action.calldata_);
             } else {
                 success = _executeXcm(action.calldata_);
             }
@@ -72,8 +61,6 @@ contract XcmExecutor is GovernanceStorage {
     
 
     function _executeXcm(bytes memory encodedXcmPayload) private returns (bool) {
-        // FIX: Use abi.decode to safely unpack the destination and message bytes.
-        // This is the correct and robust way to handle this.
         (bytes memory destination, bytes memory message) = abi.decode(
             encodedXcmPayload,
             (bytes, bytes)

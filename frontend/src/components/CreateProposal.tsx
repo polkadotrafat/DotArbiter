@@ -78,18 +78,18 @@ export const CreateProposal = () => {
         switch (action.type) {
           case 'xcm_remark':
             if (!action.params.remarkText) throw new Error("Action: Remark text is required.");
-            // Cast the result to the specific hex string type
             finalCalldata = await createRemarkXcmForDotArbiter(action.params.remarkText) as `0x${string}`;
             finalTargetParaId = 0;
+            finalTarget = "0x0000000000000000000000000000000000000001";
             break;
 
           case 'xcm_transfer_pas':
             if (!action.params.recipient) throw new Error("Action: Recipient address is required.");
             if (!action.params.amount) throw new Error("Action: Amount is required.");
             const amountInPlancks = parseUnits(action.params.amount, 10);
-            // Remove the incorrect .toBigInt() call
-            finalCalldata = await createTransferXcmForDotArbiter(action.params.recipient, amountInPlancks) as `0x${string}`;
-            finalTargetParaId = 0;
+            finalTargetParaId = parseInt(action.targetParaId, 10) || 0;
+            finalCalldata = await createTransferXcmForDotArbiter(finalTargetParaId, action.params.recipient, amountInPlancks) as `0x${string}`;
+            finalTarget = "0x0000000000000000000000000000000000000001";
             break;
 
           case 'local':
@@ -203,6 +203,16 @@ export const CreateProposal = () => {
 
             {action.type === 'xcm_transfer_pas' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Target Parachain ID</label>
+                  <input
+                    type="number"
+                    value={action.targetParaId || ''}
+                    onChange={(e) => handleActionChange(index, "targetParaId", e.target.value)}
+                    className="w-full px-3 py-2 border rounded-md"
+                    placeholder="e.g., 1000" required
+                  />
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Recipient Address (Substrate)</label>
                   <input

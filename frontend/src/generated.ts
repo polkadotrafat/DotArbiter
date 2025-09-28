@@ -142,7 +142,7 @@ export const delegationLogicAbi = [
  *
  */
 export const delegationLogicAddress = {
-  420420422: '0x8b0348a2EFA87dcBF2B5a179149E21708f62342f',
+  420420422: '0xe721F645867534aAFa40d9dC6354089557EFb5B3',
 } as const
 
 /**
@@ -257,7 +257,7 @@ export const governanceHubAbi = [
  *
  */
 export const governanceHubAddress = {
-  420420422: '0xa3D2d2C95De16864BF84A4be91FeC3C66997abdf',
+  420420422: '0x0a8E93b7E10714D452947848B98D6aaFA6D9006e',
 } as const
 
 /**
@@ -492,7 +492,7 @@ export const proposalLogicAbi = [
  *
  */
 export const proposalLogicAddress = {
-  420420422: '0x644050Bd1200cf3692682d90BF145E84080dc0B4',
+  420420422: '0x3794b290b9cE5f4879efAe96bdc88A6e1BB9F1E7',
 } as const
 
 /**
@@ -721,7 +721,7 @@ export const xcmExecutorAbi = [
     inputs: [{ name: 'proposalId', internalType: 'uint256', type: 'uint256' }],
     name: 'executeProposal',
     outputs: [],
-    stateMutability: 'payable',
+    stateMutability: 'nonpayable',
   },
   {
     type: 'function',
@@ -780,7 +780,7 @@ export const xcmExecutorAbi = [
  *
  */
 export const xcmExecutorAddress = {
-  420420422: '0xC7c262350d5A2bA2f3954aDE5Cb45Ff397969626',
+  420420422: '0xCF6A1dc6f777294a42d067CcA70c58332911839C',
 } as const
 
 /**

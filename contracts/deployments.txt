@@ -1,5 +1,3 @@
-> npx hardhat ignition deploy ./ignition/modules/DeployAndSetupGovernance.ts --network polkadotHubTestnet
-
 ✔ Confirm deploy to network polkadotHubTestnet (420420422)? … yes
 Hardhat Ignition 🚀
 
@@ -18,7 +16,7 @@ Batch #2
 
 Deployed Addresses
 
-DeployAndSetupGovernance#DelegationLogic - 0x8b0348a2EFA87dcBF2B5a179149E21708f62342f
-DeployAndSetupGovernance#GovernanceHub - 0xa3D2d2C95De16864BF84A4be91FeC3C66997abdf
-DeployAndSetupGovernance#ProposalLogic - 0x644050Bd1200cf3692682d90BF145E84080dc0B4
-DeployAndSetupGovernance#XcmExecutor - 0xC7c262350d5A2bA2f3954aDE5Cb45Ff397969626
+DeployAndSetupGovernance#DelegationLogic - 0xe721F645867534aAFa40d9dC6354089557EFb5B3
+DeployAndSetupGovernance#GovernanceHub - 0x0a8E93b7E10714D452947848B98D6aaFA6D9006e
+DeployAndSetupGovernance#ProposalLogic - 0x3794b290b9cE5f4879efAe96bdc88A6e1BB9F1E7
+DeployAndSetupGovernance#XcmExecutor - 0xCF6A1dc6f777294a42d067CcA70c58332911839C

@@ -12,7 +12,7 @@ import {
 import { BaseContract } from "ethers";
 
 // Constants
-const VOTING_PERIOD = 7 * 24 * 60 * 60; // 7 days in seconds
+const VOTING_PERIOD = 3600; // 1 hour in seconds
 
 function getSelectors(contract: BaseContract): string[] {
   const selectors: string[] = [];

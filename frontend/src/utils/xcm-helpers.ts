@@ -3,23 +3,18 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { BN, u8aToHex } from '@polkadot/util';
 import { ethers } from 'ethers';
-// Import the keyring for address decoding
 import { Keyring } from '@polkadot/keyring';
 
 const PASEO_RPC_URL = 'wss://rpc.ibp.network/paseo';
 
-export async function createRemarkXcmForDotArbiter(remarkText: string): Promise<string> {
+async function createXcm(targetParaId: number, encodedCall: `0x${string}`): Promise<string> {
   const api = await ApiPromise.create({ provider: new WsProvider(PASEO_RPC_URL) });
 
   const destination = api.createType('VersionedMultiLocation', {
-    V3: { parents: 1, interior: 'Here' },
-  });
-
-  // FIX for Remark: Instead of creating a full tx object, we just need the encoded call.
-  // This is more direct and less prone to context errors.
-  const remarkCall = api.registry.createType('Call', {
-      callIndex: api.tx.system.remarkWithEvent.callIndex,
-      args: [remarkText],
+    V3: {
+      parents: 1,
+      interior: targetParaId === 0 ? 'Here' : { X1: { Parachain: targetParaId } },
+    },
   });
 
   const xcmMessage = api.createType('VersionedXcm', {
@@ -27,11 +22,11 @@ export async function createRemarkXcmForDotArbiter(remarkText: string): Promise<
         Transact: {
           originKind: 'SovereignAccount',
           requireWeightAtMost: { refTime: 1_000_000_000, proofSize: 50_000 },
-          call: { encoded: remarkCall.toHex() }, // Pass the correctly encoded call
+          call: { encoded: encodedCall },
         },
     }],
   });
-  
+
   const messageBytes = xcmMessage.toU8a();
   const destinationBytes = destination.toU8a();
   await api.disconnect();
@@ -42,8 +37,18 @@ export async function createRemarkXcmForDotArbiter(remarkText: string): Promise<
   );
 }
 
+export async function createRemarkXcmForDotArbiter(remarkText: string): Promise<string> {
+  const api = await ApiPromise.create({ provider: new WsProvider(PASEO_RPC_URL) });
+  const remarkCall = api.registry.createType('Call', {
+      callIndex: api.tx.system.remarkWithEvent.callIndex,
+      args: [remarkText],
+  });
+  await api.disconnect();
+  return createXcm(0, remarkCall.toHex() as `0x${string}`);
+}
 
 export async function createTransferXcmForDotArbiter(
+  targetParaId: number,
   recipientAddress: string,
   amount: bigint
 ): Promise<string> {
@@ -51,7 +56,10 @@ export async function createTransferXcmForDotArbiter(
   const amountBn = new BN(amount.toString());
 
   const destination = api.createType('VersionedMultiLocation', {
-    V3: { parents: 1, interior: 'Here' },
+    V3: {
+      parents: 1,
+      interior: targetParaId === 0 ? 'Here' : { X1: { Parachain: targetParaId } },
+    },
   });
 
   const keyring = new Keyring({ type: 'sr25519' });
@@ -63,7 +71,7 @@ export async function createTransferXcmForDotArbiter(
   };
 
   const assetsToWithdraw = [assetToTransfer];
-  
+
   const xcmMessage = api.createType('VersionedXcm', {
     V3: [
       { WithdrawAsset: assetsToWithdraw },
@@ -76,16 +84,12 @@ export async function createTransferXcmForDotArbiter(
       {
         DepositAsset: {
           assets: { Wild: 'All' },
-          // --- THE FIX IS HERE ---
-          // Instead of passing a pre-made Codec object, we pass the plain
-          // JavaScript object that describes the MultiLocation directly.
           beneficiary: {
             parents: 0,
             interior: {
               X1: { AccountId32: { network: null, id: recipientPublicKey } }
             }
           }
-          // --- END OF FIX ---
         },
       },
     ],

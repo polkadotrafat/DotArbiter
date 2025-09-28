@@ -26,7 +26,7 @@ contract MockXcmExecutor is GovernanceStorage {
 
         for (uint256 i = 0; i < p.actions.length; i++) {
             Storage.ProposalAction memory action = p.actions[i];
-            if (action.targetParaId == 0) {
+            if (action.targetParaId == 0 && action.target != address(1)) {
                 emit LocalActionExecuted(proposalId, action.target, action.value, action.calldata_);
             } else {
                 (bytes memory destination, bytes memory message) = abi.decode(action.calldata_, (bytes, bytes));

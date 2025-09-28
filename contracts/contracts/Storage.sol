@@ -47,7 +47,7 @@ library Storage {
     }
 
     // Constants
-    uint256 constant VOTING_PERIOD = 1 days; // Changed to 1 day for testing
+    uint256 constant VOTING_PERIOD = 1 hours; // Changed to 1 hour for testing
     uint256 constant MIN_QUORUM_PERCENTAGE = 10; // 10% minimum quorum
     uint256 constant DEFAULT_MAJORITY = 51; // 51% majority required
     uint256 constant MAX_ACTIONS_PER_PROPOSAL = 10;

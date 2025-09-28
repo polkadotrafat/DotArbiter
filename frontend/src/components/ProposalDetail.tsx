@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useReadContract, useWriteContract, useAccount, useWaitForTransactionReceipt } from "wagmi";
-import { governanceHubAbi, governanceHubAddress, proposalLogicAbi, delegationLogicAbi } from "../generated";
+import { governanceHubAbi, governanceHubAddress, proposalLogicAbi, delegationLogicAbi, xcmExecutorAbi } from "../generated";
 
 export const ProposalDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [proposal, setProposal] = useState<any>(null);
   const [votingPower, setVotingPower] = useState<number>(1);
+  const [isDelegate, setIsDelegate] = useState<boolean>(false);
   
   const { address, chainId } = useAccount();
   const { data: hash, writeContract, isPending, error } = useWriteContract();
@@ -22,6 +23,22 @@ export const ProposalDetail = () => {
       enabled: !!address,
     },
   });
+
+  const { data: delegatorCount, isLoading: delegatorCountLoading } = useReadContract({
+    address: chainId ? governanceHubAddress[chainId as keyof typeof governanceHubAddress] : governanceHubAddress[420420422],
+    abi: delegationLogicAbi,
+    functionName: "getDelegatorCount",
+    args: [address!],
+    query: {
+      enabled: !!address,
+    },
+  });
+
+  useEffect(() => {
+    if (!delegatorCountLoading && delegatorCount !== undefined) {
+      setIsDelegate(Number(delegatorCount) > 0);
+    }
+  }, [delegatorCount, delegatorCountLoading]);
 
   useEffect(() => {
     if (!delegateLoading && myDelegateData !== undefined) {
@@ -318,15 +335,105 @@ export const ProposalDetail = () => {
         </div>
       </div>
 
+  const handleVoteByProxy = (support: boolean) => {
+    if (!proposal || !chainId) return;
+    
+    const contractAddress = governanceHubAddress[chainId as keyof typeof governanceHubAddress] || governanceHubAddress[420420422];
+    if (!contractAddress) {
+      alert("Contract address not found for the current chain.");
+      return;
+    }
+
+    writeContract({
+      address: contractAddress,
+      abi: proposalLogicAbi,
+      functionName: "voteByProxy",
+      args: [BigInt(proposal.id), support],
+    });
+  };
+
+  const handleTallyProposal = () => {
+    if (!proposal || !chainId) return;
+    
+    const contractAddress = governanceHubAddress[chainId as keyof typeof governanceHubAddress] || governanceHubAddress[420420422];
+    if (!contractAddress) {
+      alert("Contract address not found for the current chain.");
+      return;
+    }
+
+    writeContract({
+      address: contractAddress,
+      abi: proposalLogicAbi,
+      functionName: "tallyProposal",
+      args: [BigInt(proposal.id)],
+    });
+  };
+
+  const handleExecuteProposal = () => {
+    if (!proposal || !chainId) return;
+    
+    const contractAddress = governanceHubAddress[chainId as keyof typeof governanceHubAddress] || governanceHubAddress[420420422];
+    if (!contractAddress) {
+      alert("Contract address not found for the current chain.");
+      return;
+    }
+
+    writeContract({
+      address: contractAddress,
+      abi: xcmExecutorAbi,
+      functionName: "executeProposal",
+      args: [BigInt(proposal.id)],
+    });
+  };
+
+  // ...
+
+          {isDelegate && !hasVoted && proposal.status === 1 && (
+            <div className="bg-gray-50 p-4 rounded-lg mt-4">
+              <p className="text-sm text-gray-700 mb-3">You are a delegate. You can vote by proxy.</p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => handleVoteByProxy(true)}
+                  disabled={isPending || isConfirming || isLoadingHasVoted}
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md font-medium transition-colors disabled:opacity-50"
+                >
+                  {isPending ? 'Processing...' : isConfirming ? 'Confirming...' : 'Vote For by Proxy'}
+                </button>
+                <button
+                  onClick={() => handleVoteByProxy(false)}
+                  disabled={isPending || isConfirming || isLoadingHasVoted}
+                  className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md font-medium transition-colors disabled:opacity-50"
+                >
+                  {isPending ? 'Processing...' : isConfirming ? 'Confirming...' : 'Vote Against by Proxy'}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {proposal.status === 1 && new Date() > new Date(proposal.endTime * 1000) && (
+            <div className="mt-6 bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-lg font-semibold text-gray-800 mb-4">Tally Proposal</h2>
+              <p className="text-gray-600 mb-4">The voting period for this proposal has ended. It can now be tallied.</p>
+              <button
+                onClick={handleTallyProposal}
+                disabled={isPending || isConfirming}
+                className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md font-medium transition-colors disabled:opacity-50"
+              >
+                {isPending ? 'Processing...' : isConfirming ? 'Confirming...' : 'Tally Proposal'}
+              </button>
+            </div>
+          )}
+
       {proposal.status === 2 && address && ( // Passed status
         <div className="mt-6 bg-white rounded-lg shadow-md p-6">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Execute Proposal</h2>
           <p className="text-gray-600 mb-4">This proposal has passed and is ready for execution.</p>
           <button
-            // In a real app, this would call executeProposal
-            className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-md font-medium transition-colors"
+            onClick={handleExecuteProposal}
+            disabled={isPending || isConfirming}
+            className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-md font-medium transition-colors disabled:opacity-50"
           >
-            Execute Proposal
+            {isPending ? 'Processing...' : isConfirming ? 'Confirming...' : 'Execute Proposal'}
           </button>
         </div>
       )}
