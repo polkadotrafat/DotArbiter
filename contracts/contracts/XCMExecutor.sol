@@ -20,31 +20,32 @@ contract XcmExecutor is GovernanceStorage {
     // ========================================================================
 
     /// @notice Execute a passed proposal via XCM
-    function executeProposal(uint256 proposalId) external {
+    function executeProposal(uint256 proposalId) external payable { // payable is needed for local calls
         Storage.Proposal storage p = proposals[proposalId];
         
-        require(p.id != 0, "Proposal does not exist");
         require(p.status == Storage.ProposalStatus.Passed, "Proposal not passed");
 
-        // EFFECT: Prevent re-entrancy by changing state before interaction
-        p.status = Storage.ProposalStatus.Executed;
+        // Check that the correct total ETH value for all local calls was sent.
+        uint256 totalValueRequired = 0;
+        for (uint256 i = 0; i < p.actions.length; i++) {
+            totalValueRequired += p.actions[i].value;
+        }
+        require(msg.value == totalValueRequired, "Incorrect ETH value sent");
 
+        p.status = Storage.ProposalStatus.Executed;
         bool allSuccessful = true;
 
         for (uint256 i = 0; i < p.actions.length; i++) {
             Storage.ProposalAction memory action = p.actions[i];
-            
             bool success;
-            if (action.targetParaId == 0 && action.target != address(1)) {
-                // INTERACTION: Pass value explicitly to the local execution helper
+
+            if (action.targetParaId == 1000) { // 1000 is Asset Hub's ID
                 success = _executeLocal(action.target, action.value, action.calldata_);
             } else {
                 success = _executeXcm(action.calldata_);
             }
             
-            if (!success) {
-                allSuccessful = false;
-            }
+            if (!success) { allSuccessful = false; }
         }
         
         emit Storage.ProposalExecuted(proposalId, allSuccessful);
@@ -58,15 +59,10 @@ contract XcmExecutor is GovernanceStorage {
         (bool success, ) = target.call{value: value}(calldata_);
         return success;
     }
-    
 
     function _executeXcm(bytes memory encodedXcmPayload) private returns (bool) {
-        (bytes memory destination, bytes memory message) = abi.decode(
-            encodedXcmPayload,
-            (bytes, bytes)
-        );
-
-        try XCM.send(destination, message) {
+        (bytes memory destination, bytes memory message) = abi.decode(encodedXcmPayload, (bytes, bytes));
+        try IXcm(XCM_PRECOMPILE_ADDRESS).send(destination, message) {
             return true;
         } catch {
             return false;
